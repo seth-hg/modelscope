@@ -5,7 +5,6 @@ import re
 from io import BytesIO
 from typing import Any, Dict, List, Tuple, Union
 
-import decord
 import json
 import numpy as np
 import torch
@@ -574,7 +573,8 @@ class HiTeAPreprocessor(Preprocessor):
             self._num_frames = config.num_frames
         return self._num_frames
 
-    def video_open(self, path: str) -> Tuple[decord.VideoReader, int]:
+    def video_open(self, path: str) -> Tuple['decord.VideoReader', int]:
+        import decord
         if path not in self._video_map:
             index = len(self._video_map)
             vr = decord.VideoReader(path, ctx=decord.cpu(0))
@@ -599,8 +599,9 @@ class HiTeAPreprocessor(Preprocessor):
         return frame_indices
 
     def __call__(
-        self, data: Union[decord.VideoReader, tuple,
-                          Dict[str, Any]]) -> Dict[str, Any]:
+        self, data: Union['decord.VideoReader', tuple, Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        import decord
         self.cfg = Config.from_file(
             osp.join(self.model_dir, ModelFile.CONFIGURATION))
 
