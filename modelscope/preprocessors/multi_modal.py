@@ -25,9 +25,6 @@ from modelscope.utils.constant import (Fields, Invoke, ModeKeys, ModelFile,
                                        Tasks)
 from .base import Preprocessor
 from .builder import PREPROCESSORS
-from .ofa import *  # noqa
-from .ofa.utils.collate import collate_fn
-from .ofa.utils.constant import OFA_TASK_KEY_MAPPING
 
 __all__ = [
     'DiffusionImageGenerationPreprocessor', 'OfaPreprocessor',
@@ -93,6 +90,8 @@ class OfaPreprocessor(Preprocessor):
             model_dir (str): model path
             mode: preprocessor mode (model mode)
         """
+        from .ofa.utils.constant import OFA_TASK_KEY_MAPPING
+
         super().__init__(*args, **kwargs)
         preprocess_mapping = {
             Tasks.ocr_recognition: OfaOcrRecognitionPreprocessor,
@@ -146,6 +145,8 @@ class OfaPreprocessor(Preprocessor):
 
     def __call__(self, input: Union[str, tuple, Dict[str, Any]], *args,
                  **kwargs) -> Dict[str, Any]:
+        from .ofa.utils.collate import collate_fn
+
         if isinstance(input, dict):
             data = input
         else:
